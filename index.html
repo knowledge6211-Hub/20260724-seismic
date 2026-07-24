@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>淺層地底構造探勘：折射震測實驗教學網頁</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --secondary-color: #3498db;
+            --bg-light: #f8f9fa;
+            --success-color: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Microsoft JhengHei, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 4rem 1rem;
+            border-bottom: 5px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .hero-title {
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Sidebar Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: white;
+            overflow: hidden;
+        }
+
+        .nav-card .nav-link {
+            color: #495057;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card .nav-link:hover, .nav-card .nav-link.active {
+            background-color: #eef7ff;
+            color: var(--secondary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Fun Analogy Card */
+        .analogy-box {
+            background: #fff8e1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 5px solid #ffc107;
+            margin: 1.5rem 0;
+        }
+
+        /* Interactive Simulator Box */
+        .simulator-box {
+            background: #eef9ff;
+            border: 2px dashed var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* Quiz Card */
+        .quiz-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quiz-option:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Key Metrics Badges */
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        /* Image Containers */
+        .img-caption {
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .diagram-svg {
+            width: 100%;
+            height: auto;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Header -->
+    <header class="hero-section text-center">
+        <div class="container">
+            <span class="badge bg-warning text-dark mb-2 px-3 py-2 rounded-pill fs-6"><i class="bi bi-stars"></i> 地球物理探勘互動教室</span>
+            <h1 class="display-5 hero-title mb-3">淺層地底構造探勘：折射震測實驗</h1>
+            <p class="lead mb-0">用「光的折射」原理透視地下世界！不拆不挖，為地球做一次精密超音波檢查！</p>
+            <p class="mt-2 text-white-50"><small>課程來源：國立臺灣科學教育館《科學研習》第65卷第3期｜作者：陳達毅 博士</small></p>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <div class="container my-5">
+        <div class="row">
+            
+            <!-- Left Navigation Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="sticky-nav">
+                    <div class="nav-card p-2">
+                        <div class="px-3 py-2 fw-bold text-uppercase text-muted small border-bottom">單元導覽</div>
+                        <nav class="nav nav-pills flex-column mt-2">
+                            <a class="nav-link active" href="#sec1"><i class="bi bi-lightbulb me-2"></i>1. 核心概念與直覺比喻</a>
+                            <a class="nav-link" href="#sec2"><i class="bi bi-gear-wide-connected me-2"></i>2. 斯乃爾定律與臨界折射</a>
+                            <a class="nav-link" href="#sec3"><i class="bi bi-graph-up me-2"></i>3. 走時曲線圖與公式推導</a>
+                            <a class="nav-link" href="#sec4"><i class="bi bi-controller me-2"></i>4. 互動模擬器：地層推算</a>
+                            <a class="nav-link" href="#sec5"><i class="bi bi-geo-alt me-2"></i>5. 野外實作：北市大經驗</a>
+                            <a class="nav-link" href="#sec6"><i class="bi bi-check2-circle me-2"></i>6. 隨堂觀念大挑戰</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content Area -->
+            <div class="col-lg-9">
+
+                <!-- SECTION 1: CORE CONCEPT -->
+                <section id="sec1" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-lightbulb"></i> 1. 核心概念與直覺比喻</h3>
+                    <p>當我們想知道腳下的土壤深處有什麼時（是堅硬岩盤、含水層，還是古文明遺跡？），不可能盲目開挖。<strong>折射地震探勘法（Refraction Seismic Method）</strong>就是一種非破壞性的「地底超音波檢查」。</p>
+                    
+                    <div class="analogy-box">
+                        <h5><i class="bi bi-car-front-fill text-warning me-2"></i>趣美味比喻：國道與省道的賽跑</h5>
+                        <p class="mb-2">想像你和朋友要從 A 點前往 B 點競賽：</p>
+                        <ul>
+                            <li><strong>朋友（直達波）：</strong>選擇直行的「省道」（地表淺層），雖然距離最短，但限速較低（波速 $V_1$ 較慢）。</li>
+                            <li><strong>你（臨界折射波）：</strong>先開一段省道切入「國道高速公路」（深層硬岩），雖然繞了遠路，但高速公路限速極高（波速 $V_2$ 較快），最後再切回省道到達終點！</li>
+                        </ul>
+                        <p class="mb-0"><strong>結果：</strong>在近距離時，走省道的朋友會先到；但當距離超過一定程度（<strong>超越距離 $X_c$</strong>）後，走高速公路的你憑藉極速優勢，反而會「後來居上」更早到達！這就是折射震測的核心趣味所在！</p>
+                    </div>
+
+                    <div class="row text-center my-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-value"><i class="bi bi-hammer text-danger"></i> 人工震源</div>
+                                <div class="text-muted small mt-1">重鎚敲擊鐵板產生地震波</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-value"><i class="bi bi-activity text-primary"></i> 地震儀陣列</div>
+                                <div class="text-muted small mt-1">地面沿線布設捕捉微弱訊號</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-value"><i class="bi bi-card-checklist text-success"></i> 走時曲線</div>
+                                <div class="text-muted small mt-1">分析「距離-時間」關係解密地底</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: SNELL'S LAW & CRITICAL REFRACTION -->
+                <section id="sec2" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-gear-wide-connected"></i> 2. 斯乃爾定律與臨界折射波</h3>
+                    <p>地震波在穿透不同岩層時，行為與光線極為相似，完全遵守物理學的<strong>斯乃爾定律（Snell's Law）</strong>。</p>
+                    
+                    <div class="row align-items-center my-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border mb-3 mb-md-0">
+                                <h6 class="fw-bold text-primary">斯乃爾定律公式：</h6>
+                                <p class="fs-5 text-center my-2">$$rac{\sin(	heta_1)}{\sin(	heta_2)} = rac{V_1}{V_2}$$</p>
+                                <p class="small text-muted mb-0">當下層波速大於上層 ($V_2 > V_1$)，折射角 $	heta_2$ 會大於入射角 $	heta_1$。</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent"><strong>臨界角 ($	heta_c$)：</strong>當入射角增大到讓折射角恰好達到 $90^\circ$ 時的特殊入射角。</li>
+                                <li class="list-group-item bg-transparent"><strong>臨界折射波 (Head Wave)：</strong>以臨界角入射後，震波不再進入下層，而是貼著交界面以 $V_2$ 高速滑行，並持續向地表輻射訊號。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Schematic Diagram -->
+                    <div class="my-4 text-center">
+                        <svg class="diagram-svg" viewBox="0 0 600 250">
+                            <!-- Background Layers -->
+                            <rect x="0" y="0" width="600" height="100" fill="#fef3c7" />
+                            <text x="10" y="25" fill="#d97706" font-weight="bold">第一層地層 (表土) : 波速 V1 (較慢)</text>
+                            <rect x="0" y="100" width="600" height="150" fill="#dbeafe" />
+                            <text x="10" y="125" fill="#1d4ed8" font-weight="bold">第二層地層 (堅硬岩盤/含水層) : 波速 V2 (較快, V2 > V1)</text>
+                            
+                            <!-- Surface line -->
+                            <line x1="0" y1="20" x2="600" y2="20" stroke="#78350f" stroke-width="3" />
+
+                            <!-- Source & Receiver -->
+                            <circle cx="80" cy="20" r="8" fill="#dc2626" />
+                            <text x="70" y="12" fill="#dc2626" font-weight="bold">震源 A</text>
+                            <circle cx="520" cy="20" r="8" fill="#16a34a" />
+                            <text x="500" y="12" fill="#16a34a" font-weight="bold">地震儀 D</text>
+
+                            <!-- Direct Ray Line -->
+                            <line x1="80" y1="20" x2="520" y2="20" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,5"/>
+                            <text x="270" y="15" fill="#dc2626" font-size="12">直達波 (Direct Ray)</text>
+
+                            <!-- Refracted Ray Path -->
+                            <line x1="80" y1="20" x2="200" y2="100" stroke="#2563eb" stroke-width="3" />
+                            <line x1="200" y1="100" x2="400" y2="100" stroke="#2563eb" stroke-width="4" />
+                            <line x1="400" y1="100" x2="520" y2="20" stroke="#2563eb" stroke-width="3" />
+                            
+                            <text x="120" y="70" fill="#2563eb" font-size="12">1. 入射 (角 θc)</text>
+                            <text x="270" y="95" fill="#1e40af" font-weight="bold" font-size="12">2. 沿介面高速滑行 (V2)</text>
+                            <text x="440" y="70" fill="#2563eb" font-size="12">3. 折射回地表</text>
+                        </svg>
+                        <div class="img-caption">圖 1：地震波三段式臨界折射傳播路徑示意圖</div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: TRAVEL-TIME CURVE & FORMULAS -->
+                <section id="sec3" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-graph-up"></i> 3. 走時曲線圖與數學推導</h3>
+                    <p>走時曲線圖（Travel-time Curve）是折射震測中<strong>最核心的分析密碼本</strong>。橫軸為震央距離 $x$，縱軸為波到達的時間 $T$。</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100 bg-light">
+                                <h5 class="text-danger fw-bold"><i class="bi bi-dash-lg"></i> 直達波到時線</h5>
+                                <p class="small">震波直接沿淺層傳播，公式為：</p>
+                                <p class="text-center my-2 fw-bold">$$T_1 = rac{x}{V_1}$$</p>
+                                <ul>
+                                    <li>通過原點 $(0,0)$ 的直線</li>
+                                    <li><strong>斜率：</strong> $rac{1}{V_1}$（斜率倒數即為第一層波速）</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 border rounded h-100 bg-light">
+                                <h5 class="text-success fw-bold"><i class="bi bi-dash-lg"></i> 臨界折射波到時線</h5>
+                                <p class="small">經深層高速滑行後折回，公式為：</p>
+                                <p class="text-center my-2 fw-bold">$$T_2 = rac{x}{V_2} + rac{2h\sqrt{V_2^2 - V_1^2}}{V_1 V_2}$$</p>
+                                <ul>
+                                    <li>不通過原點，斜率更平緩</li>
+                                    <li><strong>斜率：</strong> $rac{1}{V_2}$（斜率倒數即為第二層波速）</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-3">
+                        <h6 class="fw-bold"><i class="bi bi-key-fill me-2"></i>關鍵指標：超越距離 ($X_c$) 與地層厚度 ($h$) 計算</h6>
+                        <p class="mb-1">當直達波與折射波到時相等時 ($T_1 = T_2$)，兩線相交點的距離稱為<strong>超越距離 ($X_c$)</strong>。經由等式代數整理，即可求出第一層地層厚度 $h$：</p>
+                        <p class="text-center fs-5 fw-bold my-2 text-dark">$$h = rac{X_c \sqrt{V_2 - V_1}}{2 \sqrt{V_2 + V_1}}$$</p>
+                        <p class="small mb-0 text-muted">這意味著：只要野外測出 $X_c$、$V_1$ 與 $V_2$，就能不用開挖直接算出一層土壤有多厚！</p>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: INTERACTIVE SIMULATOR -->
+                <section id="sec4" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-controller"></i> 4. 互動式實驗模擬器：動態算地層！</h3>
+                    <p>拖動下方滑桿，改變實驗獲得的數據，看看走時曲線圖如何變化，並自動計算地底深度！</p>
+
+                    <div class="simulator-box">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">表層波速 $V_1$ (m/s): <span id="v1Val" class="text-primary">400</span></label>
+                                <input type="range" class="form-range" id="v1Input" min="200" max="800" step="20" value="400">
+
+                                <label class="form-label fw-bold mt-2">下層波速 $V_2$ (m/s): <span id="v2Val" class="text-success">1000</span></label>
+                                <input type="range" class="form-range" id="v2Input" min="600" max="2000" step="50" value="1000">
+
+                                <label class="form-label fw-bold mt-2">超越距離 $X_c$ (m): <span id="xcVal" class="text-danger">15</span></label>
+                                <input type="range" class="form-range" id="xcInput" min="5" max="30" step="1" value="15">
+
+                                <div class="p-3 bg-white border rounded mt-3">
+                                    <h6 class="fw-bold text-secondary">即時地層反推結果：</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>計算地層厚度 ($h$)：</span>
+                                        <span class="fs-4 fw-bold text-accent" id="calcH">3.27 m</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <span>臨界角 ($	heta_c$)：</span>
+                                        <span class="fw-bold text-dark" id="calcTheta">23.58°</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="ttCanvas" style="max-height: 280px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: FIELDWORK EXPERIENCE -->
+                <section id="sec5" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-geo-alt"></i> 5. 野外實作案例：北市大圖書館後方探勘</h3>
+                    <p>2025年9月24日，臺北市立大學地球環境暨生物資源學系師生，於校園圖書館後方進行了一場真實的野外折射震測實驗。</p>
+
+                    <div class="row g-3 my-2">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light text-center h-100">
+                                <i class="bi bi-tools fs-2 text-warning"></i>
+                                <h6 class="fw-bold mt-2">1. 陣列布設</h6>
+                                <p class="small text-muted mb-0">全長 48 公尺測線，每隔 2 公尺植入一支地震儀，共計 24 個頻道通道。</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light text-center h-100">
+                                <i class="bi bi-hammer fs-2 text-danger"></i>
+                                <h6 class="fw-bold mt-2">2. 擊地激發</h6>
+                                <p class="small text-muted mb-0">學生揮動大重鎚擊打鐵板，觸發感測器同步記錄震波，經電腦「訊號疊加」抑制雜訊。</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light text-center h-100">
+                                <i class="bi bi-eye fs-2 text-success"></i>
+                                <h6 class="fw-bold mt-2">3. 透視成果</h6>
+                                <p class="small text-muted mb-0">成功判讀出校園地下約 <strong>2.5 ~ 4.5 公尺</strong> 深處存在一物理性質劇變的介面！</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive my-3">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>地層分層</th>
+                                    <th>震波速度 ($V$)</th>
+                                    <th>地質特徵與判讀結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">第一層 (表土)</td>
+                                    <td><span class="badge bg-secondary">300 - 480 m/s</span></td>
+                                    <td>鬆散表土、人工回填土，與林地地貌觀測完全吻合。</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">第二層 (深部)</td>
+                                    <td><span class="badge bg-primary">600 - 1700+ m/s</span></td>
+                                    <td>低速區為風化軟岩/黏土；>1500 m/s 區段強烈暗示觸及<strong>飽和含水層</strong>（水中聲速約1500m/s）或完整岩盤。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote class="blockquote bg-light p-3 border-start border-4 border-info rounded fs-6">
+                        <p class="mb-1"><i class="bi bi-chat-quote-fill text-info me-2"></i>「最印象深刻的是電腦立刻跑出波形的那一刻，波形一層一層疊加，慢慢可以看見完整的折點，非常神奇，透過這張圖我們就可以判斷地下的結構！」</p>
+                        <footer class="blockquote-footer mt-1">參予實驗之北市大學生心得</footer>
+                    </blockquote>
+                </section>
+
+                <!-- SECTION 6: QUIZ CHALLENGE -->
+                <section id="sec6" class="content-card">
+                    <h3 class="section-title"><i class="bi bi-check2-circle"></i> 6. 觀念大挑戰 (隨堂測驗)</h3>
+                    <p>測試一下你剛剛學習的成果吧！點擊選項即可查看解答。</p>
+
+                    <div class="quiz-card">
+                        <h6 class="fw-bold"><i class="bi bi-question-circle-fill text-primary me-2"></i>Q1. 折射震測法能夠產生的條件，下層介質波速 $V_2$ 與上層波速 $V_1$ 的關係為何？</h6>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '錯誤！如果 V2 < V1，折射角會小於入射角，無法產生貼著介面滑行的臨界折射波。')">A. $V_2 < V_1$</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, true, '正確！必須下層較硬、速度較快 (V2 > V1)，才能發生臨界折射！')">B. $V_2 > V_1$</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '錯誤！波速相等時直接沿直線穿透，不會產生折射。')">C. $V_2 = V_1$</div>
+                        <div class="quiz-feedback mt-2 fw-bold" style="display:none;"></div>
+                    </div>
+
+                    <div class="quiz-card">
+                        <h6 class="fw-bold"><i class="bi bi-question-circle-fill text-primary me-2"></i>Q2. 走時曲線圖中，直達波線的斜率代表什麼意義？</h6>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '不對喔！斜率是時間除以距離，所以是速度的倒數。')">A. 第一層波速 $V_1$</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, true, '賓果！走時圖縱軸為時間、橫軸為距離，斜率為 ΔT/ΔX = 1/V1。')">B. 第一層波速的倒數 ($1/V_1$)</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '錯誤！第二層波速對應的是臨界折射波線的斜率。')">C. 第二層波速 $V_2$</div>
+                        <div class="quiz-feedback mt-2 fw-bold" style="display:none;"></div>
+                    </div>
+
+                    <div class="quiz-card">
+                        <h6 class="fw-bold"><i class="bi bi-question-circle-fill text-primary me-2"></i>Q3. 超過「超越距離 ($X_c$)」之後，哪一種波會比直達波更快抵達地震儀？</h6>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, true, '完全正確！因為臨界折射波走了一段 V2 高速公路，遠距離時會後來居上！')">A. 臨界折射波</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '錯誤！直達波在超越距離之後就被折射波超越了。')">B. 直達波</div>
+                        <div class="quiz-option p-2 rounded my-1 border bg-white" onclick="checkAnswer(this, false, '錯誤！反射波路徑較長且沒有高速公路優勢。')">C. 反射波</div>
+                        <div class="quiz-feedback mt-2 fw-bold" style="display:none;"></div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-1">折射震測實驗教學網頁 ｜ 根據國立臺灣科學教育館《科學研習》第65卷第3期製作</p>
+            <p class="small text-white-50 mb-0">Designed for Engaging Earth Science Learning</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Chart.js Setup for Simulator
+        const ctx = document.getElementById('ttCanvas').getContext('2d');
+        let ttChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: '直達波 (V1)',
+                        borderColor: '#dc2626',
+                        backgroundColor: '#dc2626',
+                        data: [],
+                        showLine: true,
+                        fill: false
+                    },
+                    {
+                        label: '臨界折射波 (V2)',
+                        borderColor: '#16a34a',
+                        backgroundColor: '#16a34a',
+                        data: [],
+                        showLine: true,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: { display: true, text: '震央距離 X (m)' },
+                        min: 0,
+                        max: 40
+                    },
+                    y: {
+                        title: { display: true, text: '走時 T (秒)' },
+                        min: 0,
+                        max: 0.1
+                    }
+                }
+            }
+        });
+
+        function updateSimulator() {
+            const v1 = parseFloat(document.getElementById('v1Input').value);
+            const v2 = parseFloat(document.getElementById('v2Input').value);
+            const xc = parseFloat(document.getElementById('xcInput').value);
+
+            document.getElementById('v1Val').innerText = v1;
+            document.getElementById('v2Val').innerText = v2;
+            document.getElementById('xcVal').innerText = xc;
+
+            // Math Calculation
+            let h = 0;
+            let sinTheta = v1 / v2;
+            let thetaDeg = 0;
+
+            if (v2 > v1) {
+                h = (xc * Math.sqrt(v2 - v1)) / (2 * Math.sqrt(v2 + v1));
+                thetaDeg = Math.asin(sinTheta) * (180 / Math.PI);
+                document.getElementById('calcH').innerText = h.toFixed(2) + " m";
+                document.getElementById('calcTheta').innerText = thetaDeg.toFixed(1) + "°";
+            } else {
+                document.getElementById('calcH').innerText = "無法形成 (V2需>V1)";
+                document.getElementById('calcTheta').innerText = "N/A";
+                return;
+            }
+
+            // Generate Chart Data
+            // Direct Wave: T1 = x / V1
+            let directData = [
+                {x: 0, y: 0},
+                {x: 40, y: 40 / v1}
+            ];
+
+            // Crossover time Tc = Xc / V1
+            let tc = xc / v1;
+
+            // Refracted Wave: passes through (Xc, Tc) with slope 1/V2
+            // T2(x) = Tc + (x - Xc)/V2
+            let xMinRefract = Math.max(0, xc - 10);
+            let refractData = [
+                {x: xMinRefract, y: tc + (xMinRefract - xc) / v2},
+                {x: 40, y: tc + (40 - xc) / v2}
+            ];
+
+            ttChart.data.datasets[0].data = directData;
+            ttChart.data.datasets[1].data = refractData;
+            
+            // Adjust y axis max dynamically
+            let maxY = Math.max(40 / v1, tc + (40 - xc) / v2) * 1.1;
+            ttChart.options.scales.y.max = parseFloat(maxY.toFixed(3));
+
+            ttChart.update();
+        }
+
+        document.getElementById('v1Input').addEventListener('input', updateSimulator);
+        document.getElementById('v2Input').addEventListener('input', updateSimulator);
+        document.getElementById('xcInput').addEventListener('input', updateSimulator);
+
+        // Initial Call
+        updateSimulator();
+
+        // Quiz Logic
+        function checkAnswer(el, isCorrect, feedbackMsg) {
+            const card = el.closest('.quiz-card');
+            const feedback = card.querySelector('.quiz-feedback');
+            
+            if (isCorrect) {
+                feedback.className = "quiz-feedback mt-2 fw-bold text-success";
+                feedback.innerHTML = '<i class="bi bi-check-circle-fill"></i> ' + feedbackMsg;
+            } else {
+                feedback.className = "quiz-feedback mt-2 fw-bold text-danger";
+                feedback.innerHTML = '<i class="bi bi-x-circle-fill"></i> ' + feedbackMsg;
+            }
+            feedback.style.display = "block";
+        }
+    </script>
+</body>
+</html>
